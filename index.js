@@ -108,3 +108,28 @@ async function run() {
             const result = await reviewCollection.deleteOne(query);
             res.send(result);
         })
+
+        app.patch('/reviews/:id', verifyJWT, async (req, res) => {
+            const { id } = req.params;
+            const result = await reviewCollection.updateOne({ _id: ObjectId(id) }, { $set: req.body })
+            res.send(result);
+        })
+
+
+
+    }
+    finally {
+
+    }
+}
+
+run().catch(e => console.error(e));
+
+
+app.get('/', (req, res) => {
+    res.send('Foodies Server Running')
+})
+
+app.listen(port, () => {
+    console.log(`Foodies Loading on port: ${port}`);
+})
