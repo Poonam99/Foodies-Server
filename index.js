@@ -94,3 +94,17 @@ async function run() {
             const reviews = await cursor.toArray();
             res.send(reviews);
         });
+
+        app.post('/reviews', async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            res.send(result);
+        })
+
+
+        app.delete('/reviews/:id', verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const query = { ServiceId: id };
+            const result = await reviewCollection.deleteOne(query);
+            res.send(result);
+        })
