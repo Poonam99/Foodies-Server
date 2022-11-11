@@ -32,8 +32,8 @@ function verifyJWT(req, res, next) {
 
 async function run() {
     try {
-        const serviceCollection = client.db('Animator').collection('services');
-        const reviewCollection = client.db('Animator').collection('reviews');
+        const serviceCollection = client.db('Foodies').collection('services');
+        const reviewCollection = client.db('Foodies').collection('reviews');
 
         app.post('/jwt', async (req, res) => {
             const user = req.body;
@@ -79,4 +79,18 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const service = await reviewCollection.findOne(query);
             res.send(service);
+        });
+
+        app.get('/reviews', verifyJWT, async (req, res) => {
+            let query = {}
+            const cursor = reviewCollection.find(query).sort({ reviewTime: -1 });
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        });
+
+        app.get('/review', async (req, res) => {
+            let query = {}
+            const cursor = reviewCollection.find(query).sort({ reviewTime: -1 });
+            const reviews = await cursor.toArray();
+            res.send(reviews);
         });
